@@ -1,0 +1,7 @@
+warc
+w3lib
+scrapy
+lxml
+numpy
+langid
+nltk
