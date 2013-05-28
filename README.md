@@ -1,6 +1,6 @@
-# Parallel text extraction from GlobalVoices
+# Parallel text extraction from Global Voices
 
-[GlobalVoices](http://globalvoicesonline.org) is a community of bloggers and citizen journalists writing and translating news articles in several languages. We crawl articles from this website to create parallel corpora for low-resource languages.
+[Global Voices](http://globalvoicesonline.org) is a community of bloggers and citizen journalists writing and translating news articles in several languages. We crawl articles from this website to create parallel corpora for low-resource languages.
 
 ## Requirements
 
@@ -18,11 +18,11 @@ For example, to crawl the [Malagasy version](http://mg.globalvoicesonline.org) o
 	curl http://mg.globalvoicesonline.org/feed/ | python gv-crawl/make_seeds.py > crawl-mg/seeds.txt
 	python gv-crawl/crawler.py crawl-mg/seeds.txt crawl-mg --delay 1 2> crawl-mg/crawl.log
 
-The crawling can be interrupted and restarted; it should resume operation automatically. This also permits incremental crawling.
+The crawling can be interrupted and restarted; it should resume operation automatically. This also makes incremental crawling possible.
 
 Compressed WARC files containing the crawled pages are created.
 
-## Step 2 (up to 1h): create article database
+## Step 2: create article database
 
 After we have crawled several versions of the website, we can find parallel documents for a pair of languages. Fist, we insert all articles in a database (repeat for all languages):
 
@@ -30,18 +30,24 @@ After we have crawled several versions of the website, we can find parallel docu
 
 ## Step 3: sentence alignment
 
-Then, we use Gargantua to align the sentences:
+Then, we use the [Gargantua sentence aligner](http://sourceforge.net/projects/gargantua/) to align the sentences from parallel articles:
 
-	python gv-crawl/db2bidoc.py en mg articles.db $(GARGANTUA)
-	cd $(GARGANTUA) && mkdir corpus_data && cd corpus_data && ../src/sentence-aligner
+	python gv-crawl/db2bidoc.py en mg articles.db $GARGANTUA
+	cd $GARGANTUA && mkdir corpus_data && cd corpus_data && ../src/sentence-aligner
+
+The `db2bidoc.py` creates the tokenized/untokenized/info files necessary for Gargantua to run in the `$GARGANTUA` directory. These intermediary files (`corpus_data, corpus_to_align, input_documents`) can be deleted after the last step has been run.
 
 ## Step 4: create aligned XML bitext
 
-	python gv-crawl/align2xml.py eng mlg\
-		$(GARGANTUA)/corpus_to_align/align_info.txt\
-		$(GARGANTUA)/corpus_data/output_data_aligned > en-mg.xml
+Finally, an XML file containing the bitext is created:
 
-# License
+	python gv-crawl/align2xml.py eng mlg\
+		$GARGANTUA/corpus_to_align/align_info.txt\
+		$GARGANTUA/corpus_data/output_data_aligned > en-mg.xml
+
+This XML file can be processed with the [teny tools](https://github.com/vchahun/teny) to produce parallel text files.
+
+## License
 
 Copyright (c) 2013, [Victor Chahuneau](http://victor.chahuneau.fr/)
 

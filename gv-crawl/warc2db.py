@@ -43,7 +43,6 @@ def main():
             n_records = n_errors = 0
             print('Processing {}'.format(fn))
             warc_file = warc.open(fn)
-            previous_offset = warc_file.tell()
             for record in warc_file:
                 n_records += 1
                 try:

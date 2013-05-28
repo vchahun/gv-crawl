@@ -1,5 +1,4 @@
-warc
-w3lib
+https://github.com/vchahun/warc/archive/master.zip
 scrapy
 lxml
 numpy

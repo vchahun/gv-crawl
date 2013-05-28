@@ -28,16 +28,17 @@ def find_translation(article, lang, cur):
         cur.execute('select * from articles where id = ?', (aid,))
     else:
         cur.execute('select * from articles where url = ?', (src_url,))
-    if cur.rowcount == 1:
-        return Article(*cur.fetchone())
+    row = cur.fetchone()
+    if row is not None:
+        return Article(*row)
 
 # Aggressive tokenizer
 tokenizer = nltk.tokenize.RegexpTokenizer('(\w+|[^\s])')
 
 def write_article(article, untok, tok):
     with open(untok, 'w') as f_untok, open(tok, 'w') as f_tok:
-        paragraphs = article.entry.decode('utf8').split('\n')
-        paragraphs.insert(0, article.title.decode('utf8').replace('\n', ' '))
+        paragraphs = article.entry.split('\n')
+        paragraphs.insert(0, article.title.replace('\n', ' '))
         for paragraph in paragraphs:
             for sent in nltk.sent_tokenize(paragraph):
                 f_untok.write(sent.encode('utf8')+'\n')
