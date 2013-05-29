@@ -1,5 +1,6 @@
 https://github.com/vchahun/warc/archive/master.zip
 scrapy
+cssselect
 lxml
 numpy
 langid
