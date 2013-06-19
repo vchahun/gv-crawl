@@ -1,6 +1,6 @@
 import sqlite3
 import argparse
-from util import Article
+from articles import Article
 
 def main():
     parser = argparse.ArgumentParser(description='Dump all text')
@@ -15,7 +15,7 @@ def main():
 
     for article in cur.fetchall():
         article = Article(*article)
-        print article.entry
+        print(article.entry.encode('utf8'))
 
 if __name__ == '__main__':
     main()
