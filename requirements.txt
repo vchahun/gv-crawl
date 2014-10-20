@@ -1,5 +1,5 @@
 https://github.com/vchahun/warc/archive/master.zip
-scrapy
+scrapy==0.16
 cssselect
 lxml
 numpy
